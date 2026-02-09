@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RxTU10 Dashboard v1.4.2 - Emoji Explosion</title>
+    <title>RxTU10 Dashboard v1.4.5 - Professional Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --sci-color: #3b82f6;
@@ -15,176 +15,62 @@
             --bg-color: #f8fafc;
         }
 
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 15px;
-            color: #1e293b;
-            user-select: none;
-        }
-
+        body { font-family: 'Kanit', sans-serif; background-color: var(--bg-color); margin: 0; padding: 15px; color: #1e293b; user-select: none; }
         .container { max-width: 800px; margin: 0 auto; }
 
-        header {
-            background: white;
-            padding: 20px;
-            border-radius: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-
+        header { background: white; padding: 20px; border-radius: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h1 { margin: 0 0 15px 0; font-size: 1.5rem; text-align: center; }
 
-        .progress-label-group {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-        }
-
+        /* Progress Bar */
+        .progress-label-group { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; flex-wrap: wrap; }
         .label-item { display: flex; align-items: center; gap: 5px; font-weight: 600; }
         .dot { width: 8px; height: 8px; border-radius: 50%; }
-
-        .multi-progress {
-            display: flex;
-            height: 18px;
-            background-color: #e2e8f0;
-            border-radius: 50px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-        }
-
+        .multi-progress { display: flex; height: 18px; background-color: #e2e8f0; border-radius: 50px; overflow: hidden; }
         .progress-part { transition: width 1s ease; height: 100%; }
         .bg-sci { background-color: var(--sci-color); }
         .bg-care { background-color: var(--care-color); }
-        .bg-pending { 
-            background-color: var(--alert-red);
-            animation: blink 0.8s infinite alternate;
-        }
+        .bg-pending { background-color: var(--alert-red); animation: blink 0.8s infinite alternate; }
+        @keyframes blink { from { opacity: 1; } to { opacity: 0.4; } }
 
-        @keyframes blink {
-            from { opacity: 1; }
-            to { opacity: 0.4; }
-        }
-
+        /* Lucky Random Section */
         .lucky-section {
             background: linear-gradient(135deg, #6366f1, #a855f7);
-            padding: 25px 20px;
-            border-radius: 24px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: white;
+            padding: 30px 20px; border-radius: 24px; margin-bottom: 20px; text-align: center; color: white;
             box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
         }
-
         .random-btn {
-            background: white;
-            color: #6366f1;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-family: inherit;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
+            background: white; color: #6366f1; border: none; padding: 12px 35px; border-radius: 50px;
+            font-family: inherit; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
             box-shadow: 0 4px 0 #e2e8f0;
         }
-
         .random-btn:active { transform: translateY(3px); box-shadow: none; }
+        #random-result { margin-top: 20px; min-height: 80px; }
+        .career-text { font-size: 0.9rem; opacity: 0.9; margin-bottom: 5px; display: block; }
+        .track-result { font-size: 1.8rem; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-        #random-result {
-            font-size: 1.2rem;
-            font-weight: 400;
-            margin-top: 15px;
-            min-height: 40px;
-        }
-
+        /* ค้นหา & สถิติ */
         .search-wrapper { margin-bottom: 15px; position: sticky; top: 10px; z-index: 100; }
-        .search-box {
-            width: 100%;
-            padding: 14px 18px;
-            border: 2px solid white;
-            border-radius: 16px;
-            font-family: inherit;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-            outline: none;
-            box-sizing: border-box;
-        }
+        .search-box { width: 100%; padding: 14px 18px; border: 2px solid white; border-radius: 16px; font-family: inherit; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); outline: none; box-sizing: border-box; }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 12px;
-            border-radius: 18px;
-            text-align: center;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: 0.2s;
-        }
-
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 12px; border-radius: 18px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
         .stat-card.active-sci { border-color: var(--sci-color); background: #eff6ff; }
         .stat-card.active-care { border-color: var(--care-color); background: #fdf2f8; }
         .stat-card.active-pending { border-color: var(--alert-red); background: #fef2f2; }
-
         .stat-card h2 { margin: 0; font-size: 0.8rem; color: #64748b; }
         .stat-card .count { font-size: 1.6rem; font-weight: 600; display: block; }
 
-        #list-section {
-            background: white;
-            padding: 20px;
-            border-radius: 24px;
-            min-height: 200px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        }
-
-        .names-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-        }
-
-        .name-tag {
-            background: white;
-            padding: 12px;
-            border-radius: 15px;
-            border: 1px solid #f1f5f9;
-            cursor: pointer;
-            transition: 0.2s;
-            text-align: center;
-        }
-
-        .name-tag:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
-
+        #list-section { background: white; padding: 20px; border-radius: 24px; min-height: 200px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .names-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+        .name-tag { background: white; padding: 12px; border-radius: 15px; border: 1px solid #f1f5f9; cursor: pointer; transition: 0.2s; text-align: center; }
+        .name-tag:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); border-color: #cbd5e1; }
         .nickname { display: block; font-weight: 600; font-size: 1rem; }
         .id { font-size: 0.75rem; color: #94a3b8; }
-
-        .track-badge {
-            font-size: 0.6rem;
-            padding: 2px 8px;
-            border-radius: 6px;
-            color: white;
-            margin-top: 6px;
-            display: inline-block;
-            font-weight: 600;
-        }
+        .track-badge { font-size: 0.6rem; padding: 2px 8px; border-radius: 6px; color: white; margin-top: 6px; display: inline-block; font-weight: 600; }
 
         footer { text-align: center; margin-top: 40px; padding: 20px; color: #94a3b8; font-size: 0.85rem; }
         .credit { font-weight: 600; color: #475569; background: #e2e8f0; padding: 5px 15px; border-radius: 50px; display: inline-block; margin-top: 8px; }
-
-        #toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #334155; color: white; padding: 8px 20px; border-radius: 50px;
-            font-size: 0.85rem; display: none; z-index: 1000;
-        }
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #334155; color: white; padding: 8px 20px; border-radius: 50px; font-size: 0.85rem; display: none; z-index: 1000; }
     </style>
 </head>
 <body>
@@ -194,13 +80,11 @@
 <div class="container">
     <header>
         <h1>💊 RxTU10 Dashboard</h1>
-        
         <div class="progress-label-group">
             <div class="label-item"><span class="dot bg-sci"></span> Sci: <span id="p-sci">0</span>%</div>
             <div class="label-item"><span class="dot bg-care"></span> Care: <span id="p-care">0</span>%</div>
-            <div class="label-item" style="color: var(--alert-red)"><span class="dot bg-pending"></span> ยังขาดอีก: <span id="cnt-pending-text">0</span> คน</div>
+            <div class="label-item" style="color: var(--alert-red)"><span class="dot bg-pending"></span> รออีก: <span id="cnt-pending-text">0</span> คน</div>
         </div>
-        
         <div class="multi-progress">
             <div id="bar-sci" class="progress-part bg-sci" style="width: 0%"></div>
             <div id="bar-care" class="progress-part bg-care" style="width: 0%"></div>
@@ -209,27 +93,26 @@
     </header>
 
     <div class="lucky-section">
-        <h3 style="margin-top: 0; font-size: 1.1rem;">🔮 ทำนายดวง: คุณเหมาะกับสายไหน?</h3>
-        <button class="random-btn" onclick="startRandom()">สุ่มเลย!</button>
-        <div id="random-result">รอลุ้นผล...</div>
+        <h3 style="margin-top: 0; font-size: 1.1rem;">🔮 วิเคราะห์ดวง: คุณเหมาะกับสายไหน?</h3>
+        <button class="random-btn" id="random-btn" onclick="startRandom()">วิเคราะห์ตัวตน</button>
+        <div id="random-result">
+            <span class="track-result" style="font-size: 1.2rem; opacity: 0.7;">กดปุ่มเพื่อเริ่มทำนาย...</span>
+        </div>
     </div>
 
     <div class="search-wrapper">
-        <input type="text" class="search-box" id="search" placeholder="🔍 ค้นชื่อเพื่อน... (กดที่ชื่อเพื่อดู Emoji เด้ง!)" oninput="handleSearch()">
+        <input type="text" class="search-box" id="search" placeholder="🔍 ค้นชื่อ... (แตะที่ชื่อเพื่อดู Emoji!)" oninput="handleSearch()">
     </div>
 
     <div class="stats-grid">
         <div class="stat-card" id="card-sci" onclick="setTrack('sci')">
-            <h2>Sci</h2>
-            <span class="count" style="color: var(--sci-color)" id="cnt-sci">0</span>
+            <h2>Sci</h2><span class="count" style="color: var(--sci-color)" id="cnt-sci">0</span>
         </div>
         <div class="stat-card" id="card-care" onclick="setTrack('care')">
-            <h2>Care</h2>
-            <span class="count" style="color: var(--care-color)" id="cnt-care">0</span>
+            <h2>Care</h2><span class="count" style="color: var(--care-color)" id="cnt-care">0</span>
         </div>
         <div class="stat-card" id="card-pending" onclick="setTrack('pending')">
-            <h2>รอ</h2>
-            <span class="count" style="color: var(--alert-red)" id="cnt-pending">0</span>
+            <h2>รอ</h2><span class="count" style="color: var(--alert-red)" id="cnt-pending">0</span>
         </div>
     </div>
 
@@ -240,7 +123,7 @@
 
     <footer>
         <p>RxTU10 Track Selection Tracking<br>
-        <span class="credit">by pika v1.4.2 • Emoji Explosion</span></p>
+        <span class="credit">by pika v1.4.5 • Career & Emoji Explosion</span></p>
     </footer>
 </div>
 
@@ -251,12 +134,84 @@
         pending: ["กาฟิว 🐱 (6518610297)", "เปปเปอร์ 🌶️ (6518670150)"]
     };
 
-    const total = 83;
+    const careers = {
+        sci: ["เภสัชกร QC/QA ผู้เข้มงวด", "นักวิจัยสูตรยาตัวใหม่ระดับโลก", "ผู้เชี่ยวชาญด้านการผลิตยา", "เภสัชกรขึ้นทะเบียนยา (RA)", "อาจารย์เภสัชฯ สุดหล่อ/สวย"],
+        care: ["เภสัชกรบริบาลผู้มีใจเมตตา", "เภสัชกรโรงพยาบาลมือหนึ่ง", "เจ้าของร้านยาใจดีประจำชุมชน", "ผู้เชี่ยวชาญการใช้ยาในคลินิก", "เภสัชกรดูแลผู้ป่วยติดเตียง"]
+    };
+
+    function startRandom() {
+        const btn = document.getElementById('random-btn');
+        const resElem = document.getElementById('random-result');
+        const jokers = ["สาย นอนน้อย ☕", "สาย อ่านไม่ทัน 📚", "สาย ปาร์ตี้ 🥳", "สาย คาเฟ่ 🍰"];
+        
+        btn.disabled = true;
+        let count = 0;
+        const maxTicks = 50; // หมุนประมาณ 3 วินาที
+
+        const interval = setInterval(() => {
+            resElem.innerHTML = `<span class="track-result">${jokers[Math.floor(Math.random() * jokers.length)]}</span>`;
+            count++;
+
+            if (count > maxTicks) {
+                clearInterval(interval);
+                const finalTrack = Math.random() > 0.5 ? 'sci' : 'care';
+                const finalCareer = careers[finalTrack][Math.floor(Math.random() * careers[finalTrack].length)];
+                
+                resElem.innerHTML = `
+                    <span class="career-text">คุณเหมาะสมกับ... ${finalCareer}</span>
+                    <span class="track-result" style="color: ${finalTrack === 'sci' ? 'white' : 'white'}">
+                        สาย ${finalTrack.toUpperCase()} ${finalTrack === 'sci' ? '💊' : '❤️'}
+                    </span>
+                `;
+                
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                btn.disabled = false;
+            }
+        }, 60);
+    }
+
+    // ฟังก์ชันยิงพลุ Emoji แบบ Fix แล้ว
+    function celebrate(track, event, nameWithEmoji) {
+        const colors = { sci: ['#3b82f6', '#ffffff'], care: ['#ec4899', '#ffffff'], pending: ['#ef4444', '#ffffff'] };
+        
+        // ดึง Emoji ออกมา
+        const emoji = nameWithEmoji.match(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g) || ["✨"];
+        
+        const rect = event.currentTarget.getBoundingClientRect();
+        const x = (rect.left + rect.width / 2) / window.innerWidth;
+        const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+        // ยิงพลุสีพื้นฐานก่อน (กันพลาด)
+        confetti({ particleCount: 30, spread: 60, origin: { x, y }, colors: colors[track] });
+
+        // ยิง Emoji (ใช้ shapeFromText)
+        if (confetti.shapeFromText) {
+            const shape = confetti.shapeFromText({ text: emoji[0], scalar: 3 });
+            confetti({
+                shapes: [shape],
+                particleCount: 15,
+                scalar: 3,
+                spread: 90,
+                origin: { x, y }
+            });
+        }
+
+        const idText = event.currentTarget.querySelector('.id').innerText;
+        navigator.clipboard.writeText(idText);
+        showToast(`คัดลอกรหัส ${idText} แล้ว! 📋`);
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2000);
+    }
 
     function updateDashboard() {
+        const total = 83;
         const sP = (data.sci.length / total * 100).toFixed(1);
         const cP = (data.care.length / total * 100).toFixed(1);
-        const pP = (data.pending.length / total * 100).toFixed(1);
         document.getElementById('p-sci').innerText = sP;
         document.getElementById('p-care').innerText = cP;
         document.getElementById('cnt-pending-text').innerText = data.pending.length;
@@ -266,67 +221,8 @@
         setTimeout(() => {
             document.getElementById('bar-sci').style.width = sP + '%';
             document.getElementById('bar-care').style.width = cP + '%';
-            document.getElementById('bar-pending').style.width = pP + '%';
+            document.getElementById('bar-pending').style.width = (data.pending.length / total * 100) + '%';
         }, 200);
-    }
-
-    function startRandom() {
-        const results = ["SCI 💊", "CARE ❤️", "ปาร์ตี้ 🥳", "นอนน้อย ☕", "อ่านไม่ทัน 📚"];
-        const resElem = document.getElementById('random-result');
-        let count = 0;
-        const interval = setInterval(() => {
-            resElem.innerText = results[Math.floor(Math.random() * results.length)];
-            count++;
-            if (count > 25) {
-                clearInterval(interval);
-                const final = results[Math.floor(Math.random() * results.length)];
-                resElem.innerHTML = `คุณเหมาะสมกับ... <br><span style="font-size: 1.8rem; font-weight: 600;">สาย ${final}</span>`;
-                confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
-            }
-        }, 50);
-    }
-
-    function celebrate(track, event, nameWithEmoji) {
-        const colors = { sci: ['#3b82f6', '#ffffff'], care: ['#ec4899', '#ffffff'], pending: ['#ef4444', '#94a3b8'] };
-        
-        // สกัดเอา Emoji ออกมาจากชื่อ (ดึงตัวสุดท้ายหรือตัวที่มีใน string)
-        const emojiMatch = nameWithEmoji.match(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g);
-        const personalEmoji = emojiMatch ? emojiMatch[0] : '💊';
-
-        const rect = event.currentTarget.getBoundingClientRect();
-        const x = (rect.left + rect.width/2)/window.innerWidth;
-        const y = (rect.top + rect.height/2)/window.innerHeight;
-
-        // ยิง Emoji ของตัวเอง
-        const scalar = 2;
-        const shapes = [confetti.shapeFromText({ text: personalEmoji, scalar })];
-
-        confetti({ 
-            shapes,
-            scalar,
-            particleCount: 20, 
-            spread: 80, 
-            origin: { x, y }
-        });
-
-        // ยิงพลุสีของสายตามไป
-        confetti({ 
-            particleCount: 30, spread: 50, 
-            origin: { x, y },
-            colors: colors[track],
-            ticks: 60
-        });
-
-        const idText = event.currentTarget.querySelector('.id').innerText;
-        navigator.clipboard.writeText(idText);
-        showToast("คัดลอกรหัส " + idText + " แล้ว! 📋");
-    }
-
-    function showToast(msg) {
-        const toast = document.getElementById('toast');
-        toast.innerText = msg;
-        toast.style.display = 'block';
-        setTimeout(() => { toast.style.display = 'none'; }, 2000);
     }
 
     function setTrack(track) {
@@ -345,7 +241,7 @@
         } else {
             list = [...data.sci.map(s=>({s,t:'sci'})), ...data.care.map(s=>({s,t:'care'})), ...data.pending.map(s=>({s,t:'pending'}))]
                    .filter(x => x.s.toLowerCase().includes(filter.toLowerCase()));
-            title.innerText = filter ? `ผลการค้นหา "${filter}"` : 'กดที่ชื่อเพื่อนเพื่อดู Emoji เด้ง! 🎉';
+            title.innerText = filter ? `ค้นหา: "${filter}"` : 'แตะที่ชื่อเพื่อดู Emoji เด้ง! 🎉';
         }
         display.innerHTML = list.map(item => {
             const [n, id] = item.s.split(' (');
@@ -362,14 +258,12 @@
 
     function handleSearch() {
         const q = document.getElementById('search').value;
-        if (q) {
-            document.querySelectorAll('.stat-card').forEach(c => c.className = 'stat-card');
-            render('', q);
-        } else render('');
+        if (q) { render('', q); document.querySelectorAll('.stat-card').forEach(c => c.className = 'stat-card'); }
+        else render('');
     }
 
     updateDashboard();
-    setTrack('care');
+    render(''); // แสดงทั้งหมดตอนเริ่ม
 </script>
 </body>
 </html>
