@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RxTU10 Dashboard v1.3 - Final Countdown</title>
+    <title>RxTU10 Dashboard v1.4.2 - Emoji Explosion</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -36,7 +36,6 @@
 
         h1 { margin: 0 0 15px 0; font-size: 1.5rem; text-align: center; }
 
-        /* Progress Bar Styles */
         .progress-label-group {
             display: flex;
             justify-content: space-between;
@@ -60,34 +59,31 @@
         .progress-part { transition: width 1s ease; height: 100%; }
         .bg-sci { background-color: var(--sci-color); }
         .bg-care { background-color: var(--care-color); }
-        
-        /* กระพริบแดงสำหรับ Pending */
         .bg-pending { 
             background-color: var(--alert-red);
             animation: blink 0.8s infinite alternate;
         }
 
         @keyframes blink {
-            from { opacity: 1; background-color: var(--alert-red); }
-            to { opacity: 0.4; background-color: var(--pending-color); }
+            from { opacity: 1; }
+            to { opacity: 0.4; }
         }
 
-        /* Lucky Random Section */
         .lucky-section {
             background: linear-gradient(135deg, #6366f1, #a855f7);
-            padding: 20px;
+            padding: 25px 20px;
             border-radius: 24px;
             margin-bottom: 20px;
             text-align: center;
             color: white;
-            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
         }
 
         .random-btn {
             background: white;
             color: #6366f1;
             border: none;
-            padding: 10px 25px;
+            padding: 12px 30px;
             border-radius: 50px;
             font-family: inherit;
             font-weight: 600;
@@ -100,14 +96,12 @@
         .random-btn:active { transform: translateY(3px); box-shadow: none; }
 
         #random-result {
-            font-size: 1.8rem;
-            font-weight: 600;
+            font-size: 1.2rem;
+            font-weight: 400;
             margin-top: 15px;
             min-height: 40px;
-            display: block;
         }
 
-        /* ค้นหา & สถิติ */
         .search-wrapper { margin-bottom: 15px; position: sticky; top: 10px; z-index: 100; }
         .search-box {
             width: 100%;
@@ -164,7 +158,7 @@
             border-radius: 15px;
             border: 1px solid #f1f5f9;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: 0.2s;
             text-align: center;
         }
 
@@ -191,8 +185,6 @@
             background: #334155; color: white; padding: 8px 20px; border-radius: 50px;
             font-size: 0.85rem; display: none; z-index: 1000;
         }
-
-        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -206,7 +198,7 @@
         <div class="progress-label-group">
             <div class="label-item"><span class="dot bg-sci"></span> Sci: <span id="p-sci">0</span>%</div>
             <div class="label-item"><span class="dot bg-care"></span> Care: <span id="p-care">0</span>%</div>
-            <div class="label-item" style="color: var(--alert-red)"><span class="dot bg-pending"></span> เหลืออีก: <span id="cnt-pending-text">0</span> คน</div>
+            <div class="label-item" style="color: var(--alert-red)"><span class="dot bg-pending"></span> ยังขาดอีก: <span id="cnt-pending-text">0</span> คน</div>
         </div>
         
         <div class="multi-progress">
@@ -217,13 +209,13 @@
     </header>
 
     <div class="lucky-section">
-        <h3 style="margin-top: 0; font-size: 1.1rem;">🔮 สุ่มดวง: คุณเหมาะกับสายไหน?</h3>
-        <button class="random-btn" onclick="startRandom()">กดเพื่อทำนายดวง</button>
-        <div id="random-result">???</div>
+        <h3 style="margin-top: 0; font-size: 1.1rem;">🔮 ทำนายดวง: คุณเหมาะกับสายไหน?</h3>
+        <button class="random-btn" onclick="startRandom()">สุ่มเลย!</button>
+        <div id="random-result">รอลุ้นผล...</div>
     </div>
 
     <div class="search-wrapper">
-        <input type="text" class="search-box" id="search" placeholder="🔍 ค้นชื่อเพื่อน... (แตะที่ชื่อเพื่อฉลอง)" oninput="handleSearch()">
+        <input type="text" class="search-box" id="search" placeholder="🔍 ค้นชื่อเพื่อน... (กดที่ชื่อเพื่อดู Emoji เด้ง!)" oninput="handleSearch()">
     </div>
 
     <div class="stats-grid">
@@ -236,7 +228,7 @@
             <span class="count" style="color: var(--care-color)" id="cnt-care">0</span>
         </div>
         <div class="stat-card" id="card-pending" onclick="setTrack('pending')">
-            <h2>เหลือ</h2>
+            <h2>รอ</h2>
             <span class="count" style="color: var(--alert-red)" id="cnt-pending">0</span>
         </div>
     </div>
@@ -248,33 +240,29 @@
 
     <footer>
         <p>RxTU10 Track Selection Tracking<br>
-        <span class="credit">by pika v1.3 • Final Countdown</span></p>
+        <span class="credit">by pika v1.4.2 • Emoji Explosion</span></p>
     </footer>
 </div>
 
 <script>
     const data = {
-        sci: ["กิ้ฟท์ (6418610082)", "โบ (6418610140)", "อิกคิว (6418610264)", "เหนือ (6418610280)", "ขิม (6518540015)", "มายด์ (6518610016)", "ติน (6518610024)", "อ้น (6518610073)", "เอ็มมี่ (6518610099)", "โฟกัส (6518610123)", "ลิ้ง (6518610164)", "ติณณ์ (6518610172)", "เพ่ยเพ่ย (6518610180)", "ป่าน (6518610198)", "เอเชีย (6518610214)", "แพร (6518610222)", "แตงโม (6518610347)", "ส้มโอ (6518610420)", "อุ้ม (6518610446)", "ทิว (6518610479)", "แพน (6518610503)", "ปั้น (6518610545)", "แก๊ป (6518610560)", "แยม (6518610578)", "แพรไหม (6518610586)", "ไอจัง (6518610610)", "เพ้นท์ (6518670010)", "สุ่น (6518670069)", "ทะเล (6518670077)", "ตั้ว (6518670093)", "แพรวา (6518670101)", "ซาเนียร์ (6518670119)", "ว่านว่าน (6518670176)", "ฟ้าใส (6518670192)", "เขต (6518670200)", "เบเบ้ (6518670226)", "เชอร์รี่ (6518670267)"],
-        care: ["เมย์ (6418610157)", "เดียร (6418670110)", "บัว (6518610032)", "ปาล์มมี่ (6518610040)", "อุ๋งอิ๋ง (6518610057)", "เพียว (6518610065)", "ใบบัว (6518610081)", "บลู (6518610107)", "ต้นน้ำ (6518610115)", "แซนนี่ (6518610131)", "กัส (6518610149)", "นินจี้ (6518610206)", "นนท์ (6518610230)", "มินท์ (6518610248)", "แป้ง (6518610255)", "ตีตี้ (6518610263)", "แพม (6518610271)", "อะตอม (6518610305)", "นาย (6518610313)", "การ์ตูน (6518610321)", "นัซ (6518610354)", "แพนด้า (6518610362)", "ปิ๊ก (6518610388)", "จอย (6518610396)", "มายด์ (6518610404)", "โดนัท (6518610453)", "บุ๊ค (6518610461)", "ปอนด์ (6518610495)", "เบค (6518610511)", "ต้นกล้า (6518610537)", "มิ้นท์ (6518610552)", "ต้นน้ำ (6518610602)", "แพรทอง (6518660011)", "แก้ม (6518660029)", "แสนดี (6518670028)", "อุ๊กอิ๊ก (6518670044)", "ต้้นน้ำ (6518670085)", "เจ (6518670135)", "เปมี่ (6518670143)", "ท้องฟ้า (6518670184)", "พีช (6518670218)", "สมายด์ (6518670242)", "แพร (6518670259)", "ตะวัน (6518670283)"],
-        pending: ["กาฟิว (6518610297)", "เปปเปอร์ (6518670150)"]
+        sci: ["กิ้ฟท์ 🎁 (6418610082)", "โบ 🎀 (6418610140)", "อิกคิว 👦 (6418610264)", "เหนือ ⛰️ (6418610280)", "ขิม 🎼 (6518540015)", "มายด์ 💖 (6518610016)", "ติน 💎 (6518610024)", "อ้น 🐿️ (6518610073)", "เอ็มมี่ 🌸 (6518610099)", "โฟกัส 🔍 (6518610123)", "ลิ้ง 🔗 (6518610164)", "ติณณ์ ✨ (6518610172)", "เพ่ยเพ่ย 🏮 (6518610180)", "ป่าน 🌿 (6518610198)", "เอเชีย 🌏 (6518610214)", "แพร 👗 (6518610222)", "แตงโม 🍉 (6518610347)", "ส้มโอ 🍊 (6518610420)", "อุ้ม 🤗 (6518610446)", "ทิว 🌲 (6518610479)", "แพน 🐼 (6518610503)", "ปั้น 🏺 (6518610545)", "แก๊ป 🧢 (6518610560)", "แยม 🍓 (6518610578)", "แพรไหม 🧵 (6518610586)", "ไอจัง 🍦 (6518610610)", "เพ้นท์ 🎨 (6518670010)", "สุ่น 🧶 (6518670069)", "ทะเล 🌊 (6518670077)", "ตั้ว 🎟️ (6518670093)", "แพรวา 💎 (6518670101)", "ซาเนียร์ 🎐 (6518670119)", "ว่านว่าน 🍃 (6518670176)", "ฟ้าใส ☀️ (6518670192)", "เขต 🏁 (6518670200)", "เบเบ้ 🧸 (6518670226)", "เชอร์รี่ 🍒 (6518670267)"],
+        care: ["เมย์ 🌙 (6418610157)", "เดียร 🦌 (6418670110)", "บัว 🪷 (6518610032)", "ปาล์มมี่ 🌴 (6518610040)", "อุ๋งอิ๋ง 🦭 (6518610057)", "เพียว 🫧 (6518610065)", "ใบบัว 🍃 (6518610081)", "บลู 💙 (6518610107)", "ต้นน้ำ 🌱 (6518610115)", "แซนนี่ ☀️ (6518610131)", "กัส ⛽ (6518610149)", "นินจี้ 🥷 (6518610206)", "นนท์ 🕶️ (6518610230)", "มินท์ 🌿 (6518610248)", "แป้ง 🍞 (6518610255)", "ตีตี้ 🎸 (6518610263)", "แพม 👒 (6518610271)", "อะตอม ⚛️ (6518610305)", "นาย 👔 (6518610313)", "การ์ตูน 📖 (6518610321)", "นัซ 🌠 (6518610354)", "แพนด้า 🐼 (6518610362)", "ปิ๊ก 🎸 (6518610388)", "จอย 😊 (6518610396)", "มายด์ ✨ (6518610404)", "โดนัท 🍩 (6518610453)", "บุ๊ค 📚 (6518610461)", "ปอนด์ 💷 (6518610495)", "เบค 🥓 (6518610511)", "ต้นกล้า 🪴 (6518610537)", "มิ้นท์ 🌱 (6518610552)", "ต้นน้ำ 💧 (6518610602)", "แพรทอง ✨ (6518660011)", "แก้ม 😊 (6518660029)", "แสนดี 😇 (6518670028)", "อุ๊กอิ๊ก 🐣 (6518670044)", "ต้้นน้ำ 🌊 (6518670085)", "เจ 🃏 (6518670135)", "เปมี่ 🍭 (6518670143)", "ท้องฟ้า ☁️ (6518670184)", "พีช 🍑 (6518670218)", "สมายด์ 😁 (6518670242)", "แพร 🌸 (6518670259)", "ตะวัน 🌻 (6518670283)"],
+        pending: ["กาฟิว 🐱 (6518610297)", "เปปเปอร์ 🌶️ (6518670150)"]
     };
 
     const total = 83;
-    let activeTrack = '';
 
     function updateDashboard() {
         const sP = (data.sci.length / total * 100).toFixed(1);
         const cP = (data.care.length / total * 100).toFixed(1);
         const pP = (data.pending.length / total * 100).toFixed(1);
-
         document.getElementById('p-sci').innerText = sP;
         document.getElementById('p-care').innerText = cP;
         document.getElementById('cnt-pending-text').innerText = data.pending.length;
-
         document.getElementById('cnt-sci').innerText = data.sci.length;
         document.getElementById('cnt-care').innerText = data.care.length;
         document.getElementById('cnt-pending').innerText = data.pending.length;
-
         setTimeout(() => {
             document.getElementById('bar-sci').style.width = sP + '%';
             document.getElementById('bar-care').style.width = cP + '%';
@@ -282,41 +270,66 @@
         }, 200);
     }
 
-    // ฟังก์ชันสุ่มดวง
     function startRandom() {
-        const results = ["สาย SCI 💊", "สาย CARE ❤️", "สาย ปาร์ตี้ 🥳", "สาย นอนน้อย ☕", "สาย อ่านไม่ทัน 📚"];
+        const results = ["SCI 💊", "CARE ❤️", "ปาร์ตี้ 🥳", "นอนน้อย ☕", "อ่านไม่ทัน 📚"];
         const resElem = document.getElementById('random-result');
         let count = 0;
         const interval = setInterval(() => {
             resElem.innerText = results[Math.floor(Math.random() * results.length)];
             count++;
-            if (count > 20) {
+            if (count > 25) {
                 clearInterval(interval);
-                const final = results[Math.floor(Math.random() * 2)]; // สุ่มให้ลงที่ Sci หรือ Care
-                resElem.innerText = "ดวงคุณคือ... " + final;
+                const final = results[Math.floor(Math.random() * results.length)];
+                resElem.innerHTML = `คุณเหมาะสมกับ... <br><span style="font-size: 1.8rem; font-weight: 600;">สาย ${final}</span>`;
                 confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
             }
         }, 50);
     }
 
-    function celebrate(track, event) {
+    function celebrate(track, event, nameWithEmoji) {
         const colors = { sci: ['#3b82f6', '#ffffff'], care: ['#ec4899', '#ffffff'], pending: ['#ef4444', '#94a3b8'] };
+        
+        // สกัดเอา Emoji ออกมาจากชื่อ (ดึงตัวสุดท้ายหรือตัวที่มีใน string)
+        const emojiMatch = nameWithEmoji.match(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g);
+        const personalEmoji = emojiMatch ? emojiMatch[0] : '💊';
+
         const rect = event.currentTarget.getBoundingClientRect();
+        const x = (rect.left + rect.width/2)/window.innerWidth;
+        const y = (rect.top + rect.height/2)/window.innerHeight;
+
+        // ยิง Emoji ของตัวเอง
+        const scalar = 2;
+        const shapes = [confetti.shapeFromText({ text: personalEmoji, scalar })];
+
         confetti({ 
-            particleCount: 40, spread: 60, 
-            origin: { x: (rect.left + rect.width/2)/window.innerWidth, y: (rect.top + rect.height/2)/window.innerHeight },
-            colors: colors[track]
+            shapes,
+            scalar,
+            particleCount: 20, 
+            spread: 80, 
+            origin: { x, y }
         });
+
+        // ยิงพลุสีของสายตามไป
+        confetti({ 
+            particleCount: 30, spread: 50, 
+            origin: { x, y },
+            colors: colors[track],
+            ticks: 60
+        });
+
         const idText = event.currentTarget.querySelector('.id').innerText;
         navigator.clipboard.writeText(idText);
+        showToast("คัดลอกรหัส " + idText + " แล้ว! 📋");
+    }
+
+    function showToast(msg) {
         const toast = document.getElementById('toast');
+        toast.innerText = msg;
         toast.style.display = 'block';
-        setTimeout(() => { toast.style.display = 'none'; }, 1500);
+        setTimeout(() => { toast.style.display = 'none'; }, 2000);
     }
 
     function setTrack(track) {
-        activeTrack = track;
-        document.getElementById('search').value = '';
         document.querySelectorAll('.stat-card').forEach(c => c.className = 'stat-card');
         document.getElementById('card-' + track).classList.add('active-' + track);
         render(track);
@@ -332,13 +345,13 @@
         } else {
             list = [...data.sci.map(s=>({s,t:'sci'})), ...data.care.map(s=>({s,t:'care'})), ...data.pending.map(s=>({s,t:'pending'}))]
                    .filter(x => x.s.toLowerCase().includes(filter.toLowerCase()));
-            title.innerText = filter ? `ผลการค้นหา "${filter}"` : 'แตะที่ชื่อเพื่อนเพื่อฉลอง! 🎉';
+            title.innerText = filter ? `ผลการค้นหา "${filter}"` : 'กดที่ชื่อเพื่อนเพื่อดู Emoji เด้ง! 🎉';
         }
         display.innerHTML = list.map(item => {
             const [n, id] = item.s.split(' (');
             const color = item.t === 'sci' ? 'var(--sci-color)' : (item.t === 'care' ? 'var(--care-color)' : 'var(--alert-red)');
             return `
-                <div class="name-tag" onclick="celebrate('${item.t}', event)">
+                <div class="name-tag" onclick="celebrate('${item.t}', event, '${n}')">
                     <span class="nickname">${n}</span>
                     <span class="id">${id.replace(')', '')}</span>
                     <span class="track-badge" style="background:${color}">${item.t.toUpperCase()}</span>
@@ -351,10 +364,8 @@
         const q = document.getElementById('search').value;
         if (q) {
             document.querySelectorAll('.stat-card').forEach(c => c.className = 'stat-card');
-            activeTrack = '';
             render('', q);
-        } else if (activeTrack) setTrack(activeTrack);
-        else render('');
+        } else render('');
     }
 
     updateDashboard();
