@@ -3,74 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RxTU10 Dashboard v1.4.5 - Professional Edition</title>
+    <title>RxTU10 Dashboard v1.6.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --sci-color: #3b82f6;
-            --care-color: #ec4899;
-            --pending-color: #94a3b8;
-            --alert-red: #ef4444;
+            --sci-color: #2563eb;
+            --care-color: #10b981;
+            --all-color: #f97316;
             --bg-color: #f8fafc;
         }
 
-        body { font-family: 'Kanit', sans-serif; background-color: var(--bg-color); margin: 0; padding: 15px; color: #1e293b; user-select: none; }
+        body { font-family: 'Kanit', sans-serif; background-color: var(--bg-color); margin: 0; padding: 15px; color: #1e293b; user-select: none; -webkit-tap-highlight-color: transparent; }
         .container { max-width: 800px; margin: 0 auto; }
 
         header { background: white; padding: 20px; border-radius: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h1 { margin: 0 0 15px 0; font-size: 1.5rem; text-align: center; }
+        h1 { margin: 0 0 15px 0; font-size: 1.8rem; text-align: center; color: #334155; }
 
         /* Progress Bar */
-        .progress-label-group { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; flex-wrap: wrap; }
+        .progress-label-group { display: flex; justify-content: space-between; font-size: 1rem; margin-bottom: 8px; flex-wrap: wrap; }
         .label-item { display: flex; align-items: center; gap: 5px; font-weight: 600; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; }
-        .multi-progress { display: flex; height: 18px; background-color: #e2e8f0; border-radius: 50px; overflow: hidden; }
-        .progress-part { transition: width 1s ease; height: 100%; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        
+        .multi-progress { 
+            display: flex; height: 24px; 
+            background-color: #e2e8f0; 
+            border-radius: 50px; overflow: hidden; 
+        }
+
+        .progress-part { height: 100%; transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .bg-sci { background-color: var(--sci-color); }
         .bg-care { background-color: var(--care-color); }
-        .bg-pending { background-color: var(--alert-red); animation: blink 0.8s infinite alternate; }
-        @keyframes blink { from { opacity: 1; } to { opacity: 0.4; } }
 
-        /* Lucky Random Section */
-        .lucky-section {
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            padding: 30px 20px; border-radius: 24px; margin-bottom: 20px; text-align: center; color: white;
-            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
-        }
-        .random-btn {
-            background: white; color: #6366f1; border: none; padding: 12px 35px; border-radius: 50px;
-            font-family: inherit; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 4px 0 #e2e8f0;
-        }
-        .random-btn:active { transform: translateY(3px); box-shadow: none; }
-        #random-result { margin-top: 20px; min-height: 80px; }
-        .career-text { font-size: 0.9rem; opacity: 0.9; margin-bottom: 5px; display: block; }
-        .track-result { font-size: 1.8rem; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-
-        /* ค้นหา & สถิติ */
-        .search-wrapper { margin-bottom: 15px; position: sticky; top: 10px; z-index: 100; }
-        .search-box { width: 100%; padding: 14px 18px; border: 2px solid white; border-radius: 16px; font-family: inherit; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); outline: none; box-sizing: border-box; }
-
+        /* Stats Grid */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: white; padding: 12px; border-radius: 18px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
-        .stat-card.active-sci { border-color: var(--sci-color); background: #eff6ff; }
-        .stat-card.active-care { border-color: var(--care-color); background: #fdf2f8; }
-        .stat-card.active-pending { border-color: var(--alert-red); background: #fef2f2; }
-        .stat-card h2 { margin: 0; font-size: 0.8rem; color: #64748b; }
+        .stat-card { background: white; padding: 12px; border-radius: 18px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
+        
+        .stat-card.active-sci { border-color: var(--sci-color); background: #eff6ff; transform: scale(1.05); }
+        .stat-card.active-care { border-color: var(--care-color); background: #ecfdf5; transform: scale(1.05); }
+        .stat-card.active-all { border-color: var(--all-color); background: #fff7ed; transform: scale(1.05); }
+        
+        .stat-card h2 { margin: 0; font-size: 0.8rem; color: #64748b; text-transform: uppercase; }
         .stat-card .count { font-size: 1.6rem; font-weight: 600; display: block; }
 
+        /* Search & List */
+        .search-wrapper { margin-bottom: 15px; position: sticky; top: 10px; z-index: 100; }
+        .search-box { width: 100%; padding: 14px 18px; border: 2px solid white; border-radius: 16px; font-family: inherit; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); outline: none; box-sizing: border-box; transition: 0.3s; }
+        .search-box:focus { border-color: var(--all-color); }
         #list-section { background: white; padding: 20px; border-radius: 24px; min-height: 200px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         .names-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-        .name-tag { background: white; padding: 12px; border-radius: 15px; border: 1px solid #f1f5f9; cursor: pointer; transition: 0.2s; text-align: center; }
+        .name-tag { background: white; padding: 12px; border-radius: 15px; border: 1px solid #f1f5f9; cursor: pointer; transition: 0.2s; text-align: center; position: relative; overflow: hidden; }
         .name-tag:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); border-color: #cbd5e1; }
         .nickname { display: block; font-weight: 600; font-size: 1rem; }
         .id { font-size: 0.75rem; color: #94a3b8; }
-        .track-badge { font-size: 0.6rem; padding: 2px 8px; border-radius: 6px; color: white; margin-top: 6px; display: inline-block; font-weight: 600; }
+        .track-badge { font-size: 0.6rem; padding: 2px 8px; border-radius: 6px; color: white; margin-top: 6px; display: inline-block; font-weight: 600; text-transform: uppercase; }
+
+        /* Game Zone */
+        .game-zone { margin-top: 40px; border-top: 2px dashed #cbd5e1; padding-top: 30px; }
+        .game-header { text-align: center; margin-bottom: 20px; color: #64748b; font-weight: 600; letter-spacing: 1px; }
+        .game-card { 
+            background: white; padding: 20px; border-radius: 24px; 
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
+            margin-bottom: 20px; text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .game-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; color: #475569; }
+        
+        /* Quiz Styles */
+        .quiz-container { display: none; }
+        .quiz-question { font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; color: var(--all-color); }
+        .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .quiz-btn { 
+            background: #f1f5f9; border: none; padding: 12px; border-radius: 12px; 
+            font-family: inherit; font-size: 0.9rem; cursor: pointer; transition: 0.2s;
+            color: #334155;
+        }
+        .quiz-btn:hover { background: #e2e8f0; }
+        .quiz-btn:active { transform: scale(0.98); }
+        .score-board { font-size: 1rem; margin-bottom: 10px; color: #64748b; }
+        .start-btn { 
+            background: var(--all-color); color: white; border: none; 
+            padding: 10px 30px; border-radius: 50px; font-size: 1rem; cursor: pointer; 
+            font-family: inherit; font-weight: 600;
+        }
+
+        /* Flashcard Styles */
+        .flashcard { 
+            background: #f8fafc; border-radius: 16px; padding: 30px; 
+            min-height: 120px; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; cursor: pointer;
+            transition: 0.3s; margin-bottom: 15px; border: 2px dashed #cbd5e1;
+        }
+        .drug-name { font-size: 1.8rem; font-weight: 600; color: #334155; }
+        .drug-answer { font-size: 1.1rem; color: var(--care-color); margin-top: 10px; display: none; }
+        .reveal-hint { font-size: 0.8rem; color: #94a3b8; margin-top: 15px; }
 
         footer { text-align: center; margin-top: 40px; padding: 20px; color: #94a3b8; font-size: 0.85rem; }
         .credit { font-weight: 600; color: #475569; background: #e2e8f0; padding: 5px 15px; border-radius: 50px; display: inline-block; margin-top: 8px; }
-        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #334155; color: white; padding: 8px 20px; border-radius: 50px; font-size: 0.85rem; display: none; z-index: 1000; }
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #334155; color: white; padding: 10px 25px; border-radius: 50px; font-size: 0.9rem; display: none; z-index: 1000; }
     </style>
 </head>
 <body>
@@ -79,41 +109,31 @@
 
 <div class="container">
     <header>
-        <h1>💊 RxTU10 Dashboard</h1>
+        <h1>💊 RxTU10 💚</h1>
         <div class="progress-label-group">
-            <div class="label-item"><span class="dot bg-sci"></span> Sci: <span id="p-sci">0</span>%</div>
-            <div class="label-item"><span class="dot bg-care"></span> Care: <span id="p-care">0</span>%</div>
-            <div class="label-item" style="color: var(--alert-red)"><span class="dot bg-pending"></span> รออีก: <span id="cnt-pending-text">0</span> คน</div>
+            <div class="label-item"><span class="dot bg-sci"></span> Sci: <span id="p-sci-count">0</span> คน</div>
+            <div class="label-item"><span class="dot bg-care"></span> Care: <span id="p-care-count">0</span> คน</div>
         </div>
         <div class="multi-progress">
             <div id="bar-sci" class="progress-part bg-sci" style="width: 0%"></div>
             <div id="bar-care" class="progress-part bg-care" style="width: 0%"></div>
-            <div id="bar-pending" class="progress-part bg-pending" style="width: 0%"></div>
         </div>
     </header>
-
-    <div class="lucky-section">
-        <h3 style="margin-top: 0; font-size: 1.1rem;">🔮 วิเคราะห์ดวง: คุณเหมาะกับสายไหน?</h3>
-        <button class="random-btn" id="random-btn" onclick="startRandom()">วิเคราะห์ตัวตน</button>
-        <div id="random-result">
-            <span class="track-result" style="font-size: 1.2rem; opacity: 0.7;">กดปุ่มเพื่อเริ่มทำนาย...</span>
-        </div>
-    </div>
-
-    <div class="search-wrapper">
-        <input type="text" class="search-box" id="search" placeholder="🔍 ค้นหาชื่อเพื่อน หรือ รหัส..." oninput="handleSearch()">
-    </div>
 
     <div class="stats-grid">
         <div class="stat-card" id="card-sci" onclick="setTrack('sci')">
             <h2>Sci</h2><span class="count" style="color: var(--sci-color)" id="cnt-sci">0</span>
         </div>
+        <div class="stat-card" id="card-all" onclick="setTrack('all')">
+            <h2>รวมรุ่น</h2><span class="count" style="color: var(--all-color)" id="cnt-total">0</span>
+        </div>
         <div class="stat-card" id="card-care" onclick="setTrack('care')">
             <h2>Care</h2><span class="count" style="color: var(--care-color)" id="cnt-care">0</span>
         </div>
-        <div class="stat-card" id="card-pending" onclick="setTrack('pending')">
-            <h2>รอ</h2><span class="count" style="color: var(--alert-red)" id="cnt-pending">0</span>
-        </div>
+    </div>
+
+    <div class="search-wrapper">
+        <input type="text" class="search-box" id="search" placeholder="🔍 ค้นหาเพื่อน หรือ รหัส..." oninput="handleSearch()">
     </div>
 
     <div id="list-section">
@@ -121,81 +141,242 @@
         <div class="names-grid" id="names-display"></div>
     </div>
 
+    <div class="game-zone">
+        <div class="game-header">✨ RELAX ZONE ✨</div>
+        
+        <div class="game-card">
+            <div class="game-title">🕵️ เกมแฟนพันธุ์แท้: ทายชื่อจริงเพื่อน</div>
+            <div id="quiz-start">
+                <p>พิสูจน์ความเป็น RxTU10 ด้วยการทายชื่อจริงเพื่อนให้ถูกต่อเนื่อง!</p>
+                <button class="start-btn" onclick="startQuiz()">เริ่มเกม</button>
+            </div>
+            <div id="quiz-play" class="quiz-container">
+                <div class="score-board">คะแนนต่อเนื่อง: <span id="current-score" style="font-weight:bold; color:var(--all-color);">0</span></div>
+                <div class="quiz-question" id="quiz-nickname">น้อง...</div>
+                <div class="quiz-options" id="quiz-options">
+                    </div>
+            </div>
+        </div>
+
+        <div class="game-card">
+            <div class="game-title">💊 เกมทายยา (50 Drugs)</div>
+            <div class="flashcard" onclick="revealDrug()">
+                <div class="drug-name" id="flash-drug">???</div>
+                <div class="drug-answer" id="flash-answer">...</div>
+                <div class="reveal-hint" id="flash-hint">แตะเพื่อเฉลย</div>
+            </div>
+            <button class="quiz-btn" onclick="nextDrug()">สุ่มยาใหม่ 🔄</button>
+        </div>
+    </div>
+
     <footer>
         <p>RxTU10 Track Selection Tracking<br>
-        <span class="credit">by pika v1.4.5</span></p>
+        <span class="credit">by pika v1.6.2</span></p>
     </footer>
 </div>
 
 <script>
-    const data = {
-        sci: ["กิ้ฟท์ 🎁 (6418610082)", "โบ 🎀 (6418610140)", "อิกคิว 👦 (6418610264)", "เหนือ ⛰️ (6418610280)", "ขิม 🎼 (6518540015)", "มายด์ 💖 (6518610016)", "ติน 💎 (6518610024)", "อ้น 🐿️ (6518610073)", "เอ็มมี่ 🌸 (6518610099)", "โฟกัส 🔍 (6518610123)", "ลิ้ง 🔗 (6518610164)", "ติณณ์ ✨ (6518610172)", "เพ่ยเพ่ย 🏮 (6518610180)", "ป่าน 🌿 (6518610198)", "เอเชีย 🌏 (6518610214)", "แพร 👗 (6518610222)", "แตงโม 🍉 (6518610347)", "ส้มโอ 🍊 (6518610420)", "อุ้ม 🤗 (6518610446)", "ทิว 🌲 (6518610479)", "แพน 🐼 (6518610503)", "ปั้น 🏺 (6518610545)", "แก๊ป 🧢 (6518610560)", "แยม 🍓 (6518610578)", "แพรไหม 🧵 (6518610586)", "ไอจัง 🍦 (6518610610)", "เพ้นท์ 🎨 (6518670010)", "สุ่น 🧶 (6518670069)", "ทะเล 🌊 (6518670077)", "ตั้ว 🎟️ (6518670093)", "แพรวา 💎 (6518670101)", "ซาเนียร์ 🎐 (6518670119)", "ว่านว่าน 🍃 (6518670176)", "ฟ้าใส ☀️ (6518670192)", "เขต 🏁 (6518670200)", "เบเบ้ 🧸 (6518670226)", "เชอร์รี่ 🍒 (6518670267)"],
-        care: ["เมย์ 🌙 (6418610157)", "เดียร 🦌 (6418670110)", "บัว 🪷 (6518610032)", "ปาล์มมี่ 🌴 (6518610040)", "อุ๋งอิ๋ง 🦭 (6518610057)", "เพียว 🫧 (6518610065)", "ใบบัว 🍃 (6518610081)", "บลู 💙 (6518610107)", "ต้นน้ำ 🌱 (6518610115)", "แซนนี่ ☀️ (6518610131)", "กัส ⛽ (6518610149)", "นินจี้ 🥷 (6518610206)", "นนท์ 🕶️ (6518610230)", "มินท์ 🌿 (6518610248)", "แป้ง 🍞 (6518610255)", "ตีตี้ 🎸 (6518610263)", "แพม 👒 (6518610271)", "อะตอม ⚛️ (6518610305)", "นาย 👔 (6518610313)", "การ์ตูน 📖 (6518610321)", "นัซ 🌠 (6518610354)", "แพนด้า 🐼 (6518610362)", "ปิ๊ก 🎸 (6518610388)", "จอย 😊 (6518610396)", "มายด์ ✨ (6518610404)", "โดนัท 🍩 (6518610453)", "บุ๊ค 📚 (6518610461)", "ปอนด์ 💷 (6518610495)", "เบค 🥓 (6518610511)", "ต้นกล้า 🪴 (6518610537)", "มิ้นท์ 🌱 (6518610552)", "ต้นน้ำ 💧 (6518610602)", "แพรทอง ✨ (6518660011)", "แก้ม 😊 (6518660029)", "แสนดี 😇 (6518670028)", "อุ๊กอิ๊ก 🐣 (6518670044)", "ต้้นน้ำ 🌊 (6518670085)", "เจ 🃏 (6518670135)", "เปมี่ 🍭 (6518670143)", "ท้องฟ้า ☁️ (6518670184)", "พีช 🍑 (6518670218)", "สมายด์ 😁 (6518670242)", "แพร 🌸 (6518670259)", "ตะวัน 🌻 (6518670283)"],
-        pending: ["กาฟิว 🐱 (6518610297)", "เปปเปอร์ 🌶️ (6518670150)"]
+    // --- Data Section ---
+    const rawData = {
+        sci: [
+            "กิ้ฟท์ 🎁 (6418610082)", "โบ 🎀 (6418610140)", "อิกคิว 👦 (6418610264)", "เหนือ ⛰️ (6418610280)",
+            "ขิม 🎼 (6518540015)", "มายด์ 💖 (6518610016)", "ติน 💎 (6518610024)", "อ้น 🐿️ (6518610073)",
+            "เอ็มมี่ 🌸 (6518610099)", "โฟกัส 🔍 (6518610123)", "ลิ้ง 🔗 (6518610164)", "ติณณ์ ✨ (6518610172)",
+            "เพ่ยเพ่ย 🏮 (6518610180)", "ป่าน 🌿 (6518610198)", "เอเชีย 🌏 (6518610214)", "แพร 👗 (6518610222)",
+            "กาฟิว 🐱 (6518610297)", "แตงโม 🍉 (6518610347)", "ส้มโอ 🍊 (6518610420)", "อุ้ม 🤗 (6518610446)",
+            "ทิว 🌲 (6518610479)", "แพน 🐼 (6518610503)", "ปั้น 🏺 (6518610545)", "แก๊ป 🧢 (6518610560)",
+            "แยม 🍓 (6518610578)", "แพรไหม 🧵 (6518610586)", "ไอจัง 🍦 (6518610610)", "เพ้นท์ 🎨 (6518670010)",
+            "สุ่น 🧶 (6518670069)", "ทะเล 🌊 (6518670077)", "ตั้ว 🎟️ (6518670093)", "แพรวา 💎 (6518670101)",
+            "ซาเนียร์ 🎐 (6518670119)", "เปปเปอร์ 🌶️ (6518670150)", "ว่านว่าน 🍃 (6518670176)", "ฟ้าใส ☀️ (6518670192)",
+            "เขต 🏁 (6518670200)", "เบเบ้ 🧸 (6518670226)", "เชอร์รี่ 🍒 (6518670267)"
+        ],
+        care: [
+            "เมย์ 🌙 (6418610157)", "เดียร 🦌 (6418670110)", "บัว 🪷 (6518610032)", "ปาล์มมี่ 🌴 (6518610040)",
+            "อุ๋งอิ๋ง 🦭 (6518610057)", "เพียว 🫧 (6518610065)", "ใบบัว 🍃 (6518610081)", "บลู 💙 (6518610107)",
+            "ต้นน้ำ 🌱 (6518610115)", "แซนนี่ ☀️ (6518610131)", "กัส ⛽ (6518610149)", "นินจี้ 🥷 (6518610206)",
+            "นนท์ 🕶️ (6518610230)", "มินท์ 🌿 (6518610248)", "แป้ง 🍞 (6518610255)", "ตีตี้ 🎸 (6518610263)",
+            "แพม 👒 (6518610271)", "อะตอม ⚛️ (6518610305)", "นาย 👔 (6518610313)", "การ์ตูน 📖 (6518610321)",
+            "นัซ 🌠 (6518610354)", "แพนด้า 🐼 (6518610362)", "ปิ๊ก 🎸 (6518610388)", "จอย 😊 (6518610396)",
+            "มายด์ ✨ (6518610404)", "โดนัท 🍩 (6518610453)", "บุ๊ค 📚 (6518610461)", "ปอนด์ 💷 (6518610495)",
+            "เบค 🥓 (6518610511)", "ต้นกล้า 🪴 (6518610537)", "มิ้นท์ 🌱 (6518610552)", "ต้นน้ำ 💧 (6518610602)",
+            "แพรทอง ✨ (6518660011)", "แก้ม 😊 (6518660029)", "แสนดี 😇 (6518670028)", "อุ๊กอิ๊ก 🐣 (6518670044)",
+            "ต้้นน้ำ 🌊 (6518670085)", "เจ 🃏 (6518670135)", "เปมี่ 🍭 (6518670143)", "ท้องฟ้า ☁️ (6518670184)",
+            "พีช 🍑 (6518670218)", "สมายด์ 😁 (6518670242)", "แพร 🌸 (6518670259)", "ตะวัน 🌻 (6518670283)"
+        ]
     };
 
-    const careers = {
-        sci: ["เภสัชกรตรวจสอบคุณภาพผู้เข้มงวด", "นักวิจัยสูตรยาตัวใหม่ระดับโลก", "เภสัชกรกรีฑา", "เภสัชกรเจ้าของโรงงานยา", "อาจารย์เภสัชฯ สุดหล่อ/สวย"],
-        care: ["เภสัชกรบริบาลผู้มีใจเมตตา", "เภสัชกรโรงพยาบาลมือหนึ่ง", "เจ้าของร้านยาใจดีประจำชุมชน", "ผู้เชี่ยวชาญด้านการเม็ด (ยา)", "เภสัชกรผู้ติดเตียง"]
-    };
+    const realNamesRaw = "นางสาวชญานิศ ชายเมฆนางสาวณัชชา ศรีทองสุขนางสาวณัฏฐณิชา ตราหยกนายปวริศ ชูชมชื่นนายพศวัต พุทธิชนม์นางสาวณัฎฐริณีย์ เทือกท้าวนางสาวหรรษธร เปลี่ยนภักดีนางสาวกชกร ทรงเตชะเลิศนายกฎปิยราช ชนะสิทธิ์นางสาวกมลพร ว่องไวนางสาวกฤติยาพร คำศรีนางสาวกอแก้ว พัฒนาศูรนางสาวกัญญาณัฏฐ์ ลาภทรงสุขนายเกตุโพธิ์ ใจสงฆ์นางสาวแก้วบุษราภรณ์ เลาหกัยกุลนางสาวงามวรินทร์ กิตติจิตต์นายจิรวัฒน์ รักษ์วิเชียรนางสาวชนัญธิดา วีระวุฒิพงศ์นายชนาธิป บุญมาศิรินางสาวชวัลพัชร วิชัยศิริรัตน์นายชาคริษ บวรกิจนางสาวชาลิสา พรสุขจันทรานายญาณพัฒน์ สุขเกษมนางสาวฐณิชา จรัสวิชากรนางสาวฐิตารีย์ ปานสง่านายณพงศ์ เจริญเนติศาสตร์นางสาวณัฏฐณิชา สุดคงนางสาวณัฐกฤตา ศรีวิเชียรนายณัฐชนนท์ เครือตานางสาวณัฐณิชา ขวาลำธารนางสาวณัฐธิดา อรุณแสงนางสาวต่วนนีซาวาตี อัลอาตัสนางสาวธัญรดา โทธรัตน์นายธิติวุฒิ เพชรเงินทองนายธีรเมธ แสงอรุณนายนพเก้า วิวัฒชยางกูลนางสาวนภัสวรรณ แผลงศรนางสาวนัชชา ลักษณ์เชื้อวงศ์นางสาวนัซรียา บุญชูนางสาวนันตรา อินทร์น้อยนายประวิชญ์ อำนวยพันธ์วิไลนางสาวปรางค์ทิพย์ บุญมีวิเศษนางสาวปราณปริยา จ่าพลนางสาวปาณิสรา ศรีอาจนางสาวพรปวีณ์ บุราณเคนนายพิธินันท์ สัตติยารักษ์นายพุฒิพงศ์ ผดุงวัฒนะโชคนายภูมิรพี บูรณะสมทบนายภูวเดช นิลคตนางสาวมนณิชชา บุญนำนายรัชชานนท์ ขมิ้นทองนายวชิรวิทย์ ชำนาญวงศ์นายวศิน เอี่ยมต่อมนางสาวศุภิสรา สุวรรณศักดิ์สินนายสุรพงษ์ จันทบูรณ์นางสาวหทัยนันท์ เทพกำปนาทนางสาวอชิรญาณ์ ลำพรหมแก้วนายอัครวิทย์ นิธิบุญญาพันธ์นางสาวไอลดา ทาหะพรหมนางสาวแพรทอง เพอรัตน์นางสาวอภิสรา นุตภูติพงศ์นางสาวกวินธร เมฆะจำรูญนางสาวกานติมา มัทกิจนางสาวจาริญดา อินอัญชัญนายโชคชัย อริยะบุญสกุลนางสาวณภัทร ดำแก้วนายณัฐดนย์ อภิรติชัยศิริกุลนางสาวทัศน์สุดา ประสิทธิ์วิเศษนางสาวธีริศรา อินตรานางสาวนรมล พรหมโชตินายปิติพัตน์ รัตนสัมพันธ์นางสาวเปมิกา บุรณศิรินางสาวพรภรณ์ บุญยู่ฮงนางสาวภานิลนาถ มานะธัญญานายภาสกร นาคานางสาวมศารัศม์ พุทธะไชยทัศน์นายรัฐธีร์ พนิตจินดาศักดิ์นางสาววิรัลพัชร คุณาสถิตย์ชัยนางสาวศศินิภา แก้วสุวรรณ์นางสาวสุชัญญา หนูยิ้มนางสาวสุภัสสรา ฤกษ์รัตนีนางสาวสุมาลี นิมิตรมงคลนางสาวแสงตะวัน บุษปวนิช";
 
-    function startRandom() {
-        const btn = document.getElementById('random-btn');
-        const resElem = document.getElementById('random-result');
-        const jokers = ["สาย นอนน้อย ☕", "สาย อ่านไม่ทัน 📚", "สาย ปาร์ตี้ 🥳", "สาย คาเฟ่ 🍰"];
-        
-        btn.disabled = true;
-        let count = 0;
-        const maxTicks = 50; // หมุนประมาณ 3 วินาที
+    // 50 Drugs Database
+    const drugDatabase = [
+        { name: "Paracetamol", ans: "Analgesic, Antipyretic (แก้ปวด ลดไข้)" },
+        { name: "Amoxicillin", ans: "Antibiotic (ยาฆ่าเชื้อแบคทีเรีย)" },
+        { name: "Cetirizine", ans: "Antihistamine Gen 2 (แก้แพ้)" },
+        { name: "Omeprazole", ans: "PPI (ลดกรด รักษาโรคกระเพาะ)" },
+        { name: "Simvastatin", ans: "Statin (ลดไขมันในเลือด)" },
+        { name: "Metformin", ans: "Antidiabetic (ยารักษาเบาหวาน)" },
+        { name: "Amlodipine", ans: "CCB (ลดความดันโลหิต)" },
+        { name: "Ibuprofen", ans: "NSAIDs (แก้ปวด แก้อักเสบ)" },
+        { name: "Prednisolone", ans: "Corticosteroid (สเตียรอยด์)" },
+        { name: "Salbutamol", ans: "Bronchodilator (ขยายหลอดลม)" },
+        { name: "Losartan", ans: "ARB (ลดความดันโลหิต)" },
+        { name: "Atorvastatin", ans: "Statin (ลดไขมันในเลือด)" },
+        { name: "Clopidogrel", ans: "Antiplatelet (ต้านเกล็ดเลือด)" },
+        { name: "Gabapentin", ans: "Anticonvulsant (ระงับปวดปลายประสาท)" },
+        { name: "Domperidone", ans: "Antiemetic (แก้คลื่นไส้ อาเจียน)" },
+        { name: "Lorazepam", ans: "Benzodiazepine (คลายกังวล นอนหลับ)" },
+        { name: "Tramadol", ans: "Opioid Analgesic (แก้ปวดรุนแรง)" },
+        { name: "Acetylcysteine", ans: "Mucolytic (ละลายเสมหะ)" },
+        { name: "ORS", ans: "Electrolyte (เกลือแร่ทดแทนการเสียน้ำ)" },
+        { name: "Mefenamic Acid", ans: "NSAIDs (แก้ปวดประจำเดือน)" },
+        { name: "Enalapril", ans: "ACE Inhibitor (ลดความดันโลหิต)" },
+        { name: "Propranolol", ans: "Beta-blocker (ลดใจสั่น ลดความดัน)" },
+        { name: "Furosemide", ans: "Loop Diuretic (ยาขับปัสสาวะ)" },
+        { name: "Warfarin", ans: "Anticoagulant (ยาต้านการแข็งตัวของเลือด)" },
+        { name: "Digoxin", ans: "Cardiac Glycoside (เพิ่มแรงบีบหัวใจ)" },
+        { name: "Azithromycin", ans: "Macrolide Antibiotic (ยาฆ่าเชื้อ)" },
+        { name: "Ciprofloxacin", ans: "Fluoroquinolone Antibiotic (ยาฆ่าเชื้อ)" },
+        { name: "Doxycycline", ans: "Tetracycline Antibiotic (ยาฆ่าเชื้อ)" },
+        { name: "Ceftriaxone", ans: "Cephalosporin Gen 3 (ยาฆ่าเชื้อ)" },
+        { name: "Norfloxacin", ans: "Antibiotic (ยาฆ่าเชื้อทางเดินปัสสาวะ/ลำไส้)" },
+        { name: "Diazepam", ans: "Benzodiazepine (ระงับประสาท/กันชัก)" },
+        { name: "Fluoxetine", ans: "SSRI (ยาต้านซึมเศร้า)" },
+        { name: "Amitriptyline", ans: "TCA (ยาต้านซึมเศร้า/แก้ปวดประสาท)" },
+        { name: "Phenytoin", ans: "Anticonvulsant (ยากันชัก)" },
+        { name: "CPM (Chlorpheniramine)", ans: "Antihistamine Gen 1 (แก้แพ้ ลดน้ำมูก)" },
+        { name: "Loratadine", ans: "Antihistamine Gen 2 (แก้แพ้)" },
+        { name: "Fexofenadine", ans: "Antihistamine Gen 3 (แก้แพ้)" },
+        { name: "Dextromethorphan", ans: "Antitussive (ยาแก้ไอแห้ง)" },
+        { name: "Bromhexine", ans: "Mucolytic (ละลายเสมหะ)" },
+        { name: "Famotidine", ans: "H2 Blocker (ลดกรด)" },
+        { name: "Hyoscine", ans: "Antispasmodic (แก้ปวดเกร็งท้อง)" },
+        { name: "Loperamide", ans: "Antidiarrheal (หยุดถ่าย)" },
+        { name: "Glibenclamide", ans: "Sulfonylurea (ยารักษาเบาหวาน)" },
+        { name: "Allopurinol", ans: "Xanthine oxidase inhibitor (ลดกรดยูริก/เกาต์)" },
+        { name: "Colchicine", ans: "Antigout (รักษาเกาต์กำเริบ)" },
+        { name: "Diclofenac", ans: "NSAIDs (แก้ปวดอักเสบ)" },
+        { name: "Naproxen", ans: "NSAIDs (แก้ปวดอักเสบ)" },
+        { name: "Celecoxib", ans: "COX-2 Inhibitor (แก้ปวดอักเสบ)" },
+        { name: "Aspirin", ans: "Antiplatelet/NSAIDs (ต้านเกล็ดเลือด)" },
+        { name: "Ergotamine", ans: "Antimigraine (แก้ปวดไมเกรน)" }
+    ];
 
-        const interval = setInterval(() => {
-            resElem.innerHTML = `<span class="track-result">${jokers[Math.floor(Math.random() * jokers.length)]}</span>`;
-            count++;
+    // --- Processing Data ---
+    let allStudents = [];
+    let realNamesList = [];
 
-            if (count > maxTicks) {
-                clearInterval(interval);
-                const finalTrack = Math.random() > 0.5 ? 'sci' : 'care';
-                const finalCareer = careers[finalTrack][Math.floor(Math.random() * careers[finalTrack].length)];
-                
-                resElem.innerHTML = `
-                    <span class="career-text">คุณเหมาะจะเป็น... ${finalCareer}</span>
-                    <span class="track-result" style="color: ${finalTrack === 'sci' ? 'white' : 'white'}">
-                        สาย ${finalTrack.toUpperCase()} ${finalTrack === 'sci' ? '💊' : '❤️'}
-                    </span>
-                `;
-                
-                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-                btn.disabled = false;
+    function initData() {
+        const sciObj = rawData.sci.map(s => { const [n, id] = s.split(' ('); return { nickname: n, id: id.replace(')', ''), track: 'sci' }; });
+        const careObj = rawData.care.map(s => { const [n, id] = s.split(' ('); return { nickname: n, id: id.replace(')', ''), track: 'care' }; });
+        allStudents = [...sciObj, ...careObj].sort((a, b) => a.id.localeCompare(b.id));
+
+        const splitRegex = /(?=นาย|นางสาว)/g;
+        realNamesList = realNamesRaw.split(splitRegex)
+            .filter(n => n.trim() !== "")
+            .map(n => n.replace("นาย", "").replace("นางสาว", "").trim());
+
+        if (allStudents.length !== realNamesList.length) {
+            console.warn(`Mismatch! Nicknames: ${allStudents.length}, Realnames: ${realNamesList.length}`);
+        }
+
+        allStudents.forEach((student, index) => {
+            if (realNamesList[index]) {
+                student.realName = realNamesList[index];
+            } else {
+                student.realName = "ไม่ระบุ";
             }
-        }, 60);
+        });
     }
 
-    // ฟังก์ชันยิงพลุ Emoji แบบ Fix แล้ว
+    // --- Game 1 Logic (Quiz) ---
+    let score = 0;
+    let currentCorrectAnswer = null;
+
+    function startQuiz() {
+        document.getElementById('quiz-start').style.display = 'none';
+        document.getElementById('quiz-play').style.display = 'block';
+        score = 0;
+        updateScore();
+        nextQuestion();
+    }
+
+    function nextQuestion() {
+        const randIndex = Math.floor(Math.random() * allStudents.length);
+        const student = allStudents[randIndex];
+        currentCorrectAnswer = student.realName;
+        const cleanNickname = student.nickname.split(' ')[0]; 
+        document.getElementById('quiz-nickname').innerText = `ชื่อเล่น: ${cleanNickname}`;
+
+        let options = [currentCorrectAnswer];
+        while (options.length < 4) {
+            const wrongName = allStudents[Math.floor(Math.random() * allStudents.length)].realName;
+            if (!options.includes(wrongName)) options.push(wrongName);
+        }
+        options.sort(() => Math.random() - 0.5);
+
+        const optContainer = document.getElementById('quiz-options');
+        optContainer.innerHTML = '';
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(opt);
+            optContainer.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selected) {
+        if (selected === currentCorrectAnswer) {
+            score++;
+            updateScore();
+            confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 }, colors: ['#10b981'] });
+            nextQuestion();
+        } else {
+            alert(`❌ ผิดจ้า! ชื่อจริงของเขาคือ "${currentCorrectAnswer}"\n\nคะแนนสูงสุดของคุณ: ${score}`);
+            document.getElementById('quiz-start').style.display = 'block';
+            document.getElementById('quiz-play').style.display = 'none';
+        }
+    }
+
+    function updateScore() {
+        document.getElementById('current-score').innerText = score;
+    }
+
+    // --- Game 2 Logic (Flashcard) ---
+    function nextDrug() {
+        const randDrug = drugDatabase[Math.floor(Math.random() * drugDatabase.length)];
+        document.getElementById('flash-drug').innerText = randDrug.name;
+        document.getElementById('flash-answer').innerText = randDrug.ans;
+        document.getElementById('flash-answer').style.display = 'none';
+        document.getElementById('flash-hint').style.display = 'block';
+        document.getElementById('flash-hint').innerText = "แตะเพื่อเฉลย";
+    }
+
+    function revealDrug() {
+        document.getElementById('flash-answer').style.display = 'block';
+        document.getElementById('flash-hint').style.display = 'none';
+    }
+
+    // --- Dashboard Logic ---
     function celebrate(track, event, nameWithEmoji) {
-        const colors = { sci: ['#3b82f6', '#ffffff'], care: ['#ec4899', '#ffffff'], pending: ['#ef4444', '#ffffff'] };
-        
-        // ดึง Emoji ออกมา
-        const emoji = nameWithEmoji.match(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g) || ["✨"];
-        
+        const colors = { 
+            sci: ['#2563eb', '#ffffff'], 
+            care: ['#10b981', '#ffffff'], 
+            all: ['#f97316', '#2563eb', '#10b981'] 
+        };
+        const emojiMatch = nameWithEmoji.match(/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g);
+        const emoji = emojiMatch ? emojiMatch[0] : "✨";
         const rect = event.currentTarget.getBoundingClientRect();
         const x = (rect.left + rect.width / 2) / window.innerWidth;
         const y = (rect.top + rect.height / 2) / window.innerHeight;
+        const userColor = track === 'all' ? colors.all : colors[track];
 
-        // ยิงพลุสีพื้นฐานก่อน (กันพลาด)
-        confetti({ particleCount: 30, spread: 60, origin: { x, y }, colors: colors[track] });
-
-        // ยิง Emoji (ใช้ shapeFromText)
+        confetti({ particleCount: 25, spread: 50, origin: { x, y }, colors: userColor, ticks: 50 });
         if (confetti.shapeFromText) {
-            const shape = confetti.shapeFromText({ text: emoji[0], scalar: 3 });
-            confetti({
-                shapes: [shape],
-                particleCount: 15,
-                scalar: 3,
-                spread: 90,
-                origin: { x, y }
-            });
+            const shape = confetti.shapeFromText({ text: emoji, scalar: 3 });
+            confetti({ shapes: [shape], particleCount: 12, scalar: 3, spread: 80, origin: { x, y }, ticks: 60 });
         }
-
+        
         const idText = event.currentTarget.querySelector('.id').innerText;
         navigator.clipboard.writeText(idText);
         showToast(`คัดลอกรหัส ${idText} แล้ว! 📋`);
@@ -209,20 +390,22 @@
     }
 
     function updateDashboard() {
-        const total = 83;
-        const sP = (data.sci.length / total * 100).toFixed(1);
-        const cP = (data.care.length / total * 100).toFixed(1);
-        document.getElementById('p-sci').innerText = sP;
-        document.getElementById('p-care').innerText = cP;
-        document.getElementById('cnt-pending-text').innerText = data.pending.length;
-        document.getElementById('cnt-sci').innerText = data.sci.length;
-        document.getElementById('cnt-care').innerText = data.care.length;
-        document.getElementById('cnt-pending').innerText = data.pending.length;
+        const sciCount = rawData.sci.length;
+        const careCount = rawData.care.length;
+        const total = sciCount + careCount; 
+        const sP = (sciCount / total * 100).toFixed(1);
+        const cP = (careCount / total * 100).toFixed(1);
+        
+        document.getElementById('p-sci-count').innerText = sciCount;
+        document.getElementById('p-care-count').innerText = careCount;
+        document.getElementById('cnt-sci').innerText = sciCount;
+        document.getElementById('cnt-care').innerText = careCount;
+        document.getElementById('cnt-total').innerText = total;
+        
         setTimeout(() => {
             document.getElementById('bar-sci').style.width = sP + '%';
             document.getElementById('bar-care').style.width = cP + '%';
-            document.getElementById('bar-pending').style.width = (data.pending.length / total * 100) + '%';
-        }, 200);
+        }, 300);
     }
 
     function setTrack(track) {
@@ -233,21 +416,28 @@
 
     function render(track, filter = '') {
         const display = document.getElementById('names-display');
-        const title = document.getElementById('list-title');
         let list = [];
-        if (track) {
-            list = data[track].map(s => ({ s, t: track }));
-            title.innerText = `รายชื่อสาย ${track.toUpperCase()} (${list.length} คน)`;
+
+        if (track === 'sci') {
+            list = rawData.sci.map(s => ({ s, t: 'sci' }));
+        } else if (track === 'care') {
+            list = rawData.care.map(s => ({ s, t: 'care' }));
         } else {
-            list = [...data.sci.map(s=>({s,t:'sci'})), ...data.care.map(s=>({s,t:'care'})), ...data.pending.map(s=>({s,t:'pending'}))]
-                   .filter(x => x.s.toLowerCase().includes(filter.toLowerCase()));
-            title.innerText = filter ? `ค้นหา: "${filter}"` : 'แตะที่สายเพื่อดูรายชื่อ! 🎉';
+            list = allStudents.map(student => ({ 
+                s: `${student.nickname} (${student.id})`, 
+                t: student.track 
+            }));
+            
+            if (filter) {
+                list = list.filter(x => x.s.toLowerCase().includes(filter.toLowerCase()));
+            }
         }
+
         display.innerHTML = list.map(item => {
             const [n, id] = item.s.split(' (');
-            const color = item.t === 'sci' ? 'var(--sci-color)' : (item.t === 'care' ? 'var(--care-color)' : 'var(--alert-red)');
+            const color = item.t === 'sci' ? 'var(--sci-color)' : 'var(--care-color)';
             return `
-                <div class="name-tag" onclick="celebrate('${item.t}', event, '${n}')">
+                <div class="name-tag" onclick="celebrate('${track === 'all' ? 'all' : item.t}', event, '${n}')">
                     <span class="nickname">${n}</span>
                     <span class="id">${id.replace(')', '')}</span>
                     <span class="track-badge" style="background:${color}">${item.t.toUpperCase()}</span>
@@ -258,15 +448,15 @@
 
     function handleSearch() {
         const q = document.getElementById('search').value;
-        if (q) { render('', q); document.querySelectorAll('.stat-card').forEach(c => c.className = 'stat-card'); }
-        else render('');
+        document.querySelectorAll('.stat-card').forEach(c => c.className = 'stat-card');
+        render('all', q); 
     }
 
+    // Initialize
+    initData();
     updateDashboard();
-    render(''); // แสดงทั้งหมดตอนเริ่ม
+    render('all'); 
+    nextDrug();
 </script>
 </body>
 </html>
-
-
-
