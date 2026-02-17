@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RxTU10 Dashboard v1.7 (Toggle Name)</title>
+    <title>RxTU10 Dashboard v2.0 (Profile + Toggle Name)</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <style>
@@ -51,12 +51,40 @@
         .search-box { width: 100%; padding: 14px 18px; border: 2px solid white; border-radius: 16px; font-family: inherit; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); outline: none; box-sizing: border-box; transition: 0.3s; }
         .search-box:focus { border-color: var(--all-color); }
         #list-section { background: white; padding: 20px; border-radius: 24px; min-height: 200px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .names-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-        .name-tag { background: white; padding: 12px; border-radius: 15px; border: 1px solid #f1f5f9; cursor: pointer; transition: 0.2s; text-align: center; position: relative; overflow: hidden; }
+        .names-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+
+        /* --- Updated Name Tag with Image --- */
+        .name-tag { 
+            background: white; 
+            padding: 15px 10px; 
+            border-radius: 16px; 
+            border: 1px solid #f1f5f9; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            text-align: center; 
+            position: relative; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
         .name-tag:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); border-color: #cbd5e1; }
-        .nickname { display: block; font-weight: 600; font-size: 1rem; transition: font-size 0.2s; }
-        .id { font-size: 0.75rem; color: #94a3b8; }
-        .track-badge { font-size: 0.6rem; padding: 2px 8px; border-radius: 6px; color: white; margin-top: 6px; display: inline-block; font-weight: 600; text-transform: uppercase; }
+        
+        .profile-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            background-color: #f1f5f9;
+        }
+        /* ----------------------------------- */
+
+        .nickname { display: block; font-weight: 600; font-size: 1rem; transition: font-size 0.2s; color: #334155; }
+        .id { font-size: 0.75rem; color: #94a3b8; display: block; }
+        .track-badge { font-size: 0.6rem; padding: 2px 8px; border-radius: 6px; color: white; margin-top: 4px; display: inline-block; font-weight: 600; text-transform: uppercase; }
 
         /* Game Zone */
         .game-zone { margin-top: 40px; border-top: 2px dashed #cbd5e1; padding-top: 30px; }
@@ -106,7 +134,7 @@
 
 <div class="container">
     <header>
-        <h1>💊 RxTU10 💚</h1>
+        <h1>💊 RxTU10 Dashboard</h1>
         <div class="progress-label-group">
             <div class="label-item"><span class="dot bg-sci"></span> Sci: <span id="p-sci-count">0</span> คน</div>
             <div class="label-item"><span class="dot bg-care"></span> Care: <span id="p-care-count">0</span> คน</div>
@@ -134,7 +162,7 @@
     </div>
 
     <div id="list-section">
-        <h3 id="list-title" style="font-size: 1rem; margin-top: 0; color: #475569; text-align: center;">รายชื่อ RxTU10 (แตะที่ชื่อเพื่อดูชื่อจริง)</h3>
+        <h3 id="list-title" style="font-size: 1rem; margin-top: 0; color: #475569; text-align: center;">รายชื่อ RxTU10 (แตะรูป/ชื่อ เพื่อดูชื่อจริง)</h3>
         <div class="names-grid" id="names-display"></div>
     </div>
 
@@ -168,7 +196,7 @@
 
     <footer>
         <p>RxTU10 Track Selection Tracking<br>
-        <span class="credit">by pika v1.7 (Toggle Name)</span></p>
+        <span class="credit">by pika v2.0 (With Photos)</span></p>
     </footer>
 </div>
 
@@ -272,10 +300,6 @@
             .filter(n => n.trim() !== "")
             .map(n => n.replace("นาย", "").replace("นางสาว", "").trim());
 
-        if (allStudents.length !== realNamesList.length) {
-            console.warn(`Mismatch! Nicknames: ${allStudents.length}, Realnames: ${realNamesList.length}`);
-        }
-
         allStudents.forEach((student, index) => {
             if (realNamesList[index]) {
                 student.realName = realNamesList[index];
@@ -356,22 +380,20 @@
 
     // --- Dashboard Logic ---
 
-    // ฟังก์ชันใหม่: สลับชื่อเล่น <-> ชื่อจริง
+    // ฟังก์ชัน: สลับชื่อเล่น <-> ชื่อจริง
     function toggleName(el, nickname, realname) {
         const nameSpan = el.querySelector('.nickname');
         const isShowingReal = nameSpan.getAttribute('data-showing') === 'true';
 
         if (!isShowingReal) {
-            // เปลี่ยนเป็นชื่อจริง
             nameSpan.innerText = realname;
-            nameSpan.style.fontSize = '0.85rem'; // ปรับตัวอักษรให้เล็กลง
-            nameSpan.style.color = '#2563eb'; // เปลี่ยนสี
+            nameSpan.style.fontSize = '0.85rem'; 
+            nameSpan.style.color = '#2563eb'; 
             nameSpan.setAttribute('data-showing', 'true');
         } else {
-            // กลับมาเป็นชื่อเล่น
             nameSpan.innerText = nickname;
             nameSpan.style.fontSize = '1rem';
-            nameSpan.style.color = ''; // สีเดิม
+            nameSpan.style.color = ''; 
             nameSpan.setAttribute('data-showing', 'false');
         }
     }
@@ -405,7 +427,7 @@
         const display = document.getElementById('names-display');
         let list = [];
 
-        // Logic ในการเตรียมข้อมูลให้พร้อมสำหรับ render (ดึงชื่อจริงมารอไว้เลย)
+        // Logic ในการเตรียมข้อมูลให้พร้อมสำหรับ render
         if (track === 'sci') {
             list = rawData.sci.map(s => {
                 const [n, idWithParen] = s.split(' (');
@@ -421,7 +443,6 @@
                 return { nickname: n, id: id, track: 'care', realName: student ? student.realName : "ไม่ระบุ" };
             });
         } else {
-            // รวมทั้งสองสาย
             list = allStudents.map(student => ({ 
                 nickname: student.nickname,
                 id: student.id,
@@ -429,7 +450,6 @@
                 realName: student.realName
             }));
             
-            // กรองค้นหา
             if (filter) {
                 const f = filter.toLowerCase();
                 list = list.filter(x => x.nickname.toLowerCase().includes(f) || x.id.includes(f));
@@ -439,11 +459,22 @@
         display.innerHTML = list.map(item => {
             const color = item.track === 'sci' ? 'var(--sci-color)' : 'var(--care-color)';
             
+            // Path รูปภาพ: img/6418xxxxxx.jpg
+            const imgPath = `img/${item.id}.jpg`;
+            // Avatar อัตโนมัติถ้าไม่มีรูป
+            const defaultImg = `https://ui-avatars.com/api/?name=${item.nickname}&background=random&color=fff&size=128`;
+
             return `
                 <div class="name-tag" onclick="toggleName(this, '${item.nickname}', '${item.realName}')">
-                    <span class="nickname">${item.nickname}</span>
-                    <span class="id">${item.id}</span>
-                    <span class="track-badge" style="background:${color}">${item.track.toUpperCase()}</span>
+                    <img src="${imgPath}" 
+                         class="profile-img" 
+                         onerror="this.onerror=null; this.src='${defaultImg}';" 
+                         alt="${item.nickname}">
+                    <div>
+                        <span class="nickname">${item.nickname}</span>
+                        <span class="id">${item.id}</span>
+                        <span class="track-badge" style="background:${color}">${item.track.toUpperCase()}</span>
+                    </div>
                 </div>
             `;
         }).join('');
